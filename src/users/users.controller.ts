@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -12,22 +12,31 @@ export class UsersController {
     constructor(private usersService: UsersService) {}
 
     @Get('/:id')
-    getUser(
+    async getUser(
         @Param('id', ParseIntPipe) id: number
     ) {
+        const user = await this.usersService.findOne(id);
 
+        if(!user) {
+            throw new NotFoundException('User not exists!')
+        }
+
+        return user;
     }
 
     @ApiQuery({
-        name: "email",
+        name: "mobile",
         type: String,
         required: false
     })
     @Get()
     getUsers(
-        @Query('email') email?: string
+        @Query('mobile') mobile?: string
     ) {
-        
+        if(!mobile) {
+            return this.usersService.findAll();
+        }
+        return this.usersService.findByMobile(mobile);
     }
 
     @Post()
@@ -42,14 +51,14 @@ export class UsersController {
         @Param('id', ParseIntPipe) id: number,
         @Body() body: UpdateUserDto
     ) {
-
+        return this.usersService.update(id, body);
     }
 
     @Delete('/:id')
     removeUser(
         @Param('id', ParseIntPipe) id: number
     ) {
-
+        return this.usersService.remove(id);
     }
 
 }
