@@ -22,7 +22,22 @@ export class AuthService {
         return this.usersService.create(data);
     }
 
-    login() {
+    async login(mobile: string, password: string) {
+
+        const [user] = await this.usersService.findByMobile(mobile);
+
+        if(!user) {
+            throw new BadRequestException("Invalid Credentials!")
+        }
+
+        const [salt, storedHash] = user.password.split('.')
+        const hash = ((await scrypt(password, salt, 32)) as Buffer).toString('hex');
+
+        if (storedHash !== hash) {
+            throw new BadRequestException("Invalid Credentials!");
+        }
+
+        return user;
 
     }
     
