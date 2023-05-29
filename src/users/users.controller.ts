@@ -4,8 +4,11 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { UserDto } from './dtos/user.dto';
 
 @ApiTags('Users')
+@Serialize(UserDto)
 @Controller('users')
 export class UsersController {
 

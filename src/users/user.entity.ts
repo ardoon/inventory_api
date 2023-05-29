@@ -18,4 +18,7 @@ export class User {
     @Column()
     mobile: string;
 
+    @Column()
+    password: string;
+
 }

@@ -29,4 +29,10 @@ export class CreateUserDto {
     @IsNumberString()
     mobile: string;
 
+    @ApiProperty({
+        example: "my-password"
+    })
+    @IsString()
+    password: string;
+
 }
