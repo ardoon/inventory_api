@@ -2,10 +2,14 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query 
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { UsersService } from './users.service';
+import { User } from './user.entity';
 
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
+
+    constructor(private usersService: UsersService) {}
 
     @Get('/:id')
     getUser(
@@ -30,7 +34,7 @@ export class UsersController {
     createUser(
         @Body() body: CreateUserDto
     ) {
-
+        return this.usersService.create(body as User);
     }
 
     @Patch('/:id')

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsNumberString, IsString } from "class-validator";
+import { IsEnum, IsIn, IsNumber, IsNumberString, IsString } from "class-validator";
 
 export class CreateUserDto {
 
@@ -10,9 +10,11 @@ export class CreateUserDto {
     name: string;
 
     @ApiProperty({
-        example: "admin"
+        example: "admin",
+        enum: ['admin', 'normal', 'manager']
     })
     @IsString()
+    @IsIn(['admin', 'normal', 'manager'])
     type: string;
 
     @ApiProperty({

@@ -15,6 +15,8 @@ export const setupApp = (app: any) => {
 
 
   // ***** Validation Pipe *****
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true
+  }));
 
 }
