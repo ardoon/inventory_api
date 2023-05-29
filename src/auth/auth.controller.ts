@@ -26,13 +26,13 @@ export class AuthController {
     @Post('/login')
     async signin(@Body() body: LoginDto, @Session() session: any) {
         const user = await this.authService.login(body.mobile, body.password)
-        session.userId = user.id;
+        session.userId = user.id;        
         return user;
     }
 
     @UseGuards(AuthGuard)
     @Get('/check')
-    whoAmI(@CurrentUser() user: User) {
+    check(@CurrentUser() user: User) {        
         return user;
     }
 

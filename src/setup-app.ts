@@ -20,7 +20,15 @@ export const setupApp = (app: any) => {
     whitelist: true
   }));
 
-  // ***** Cookie Session *****
-  app.use(cookieSession({ keys: ['pleaseImportFromEnv']}))
 
+  // ***** Cookie Session *****
+  app.use(cookieSession({keys: ["KeyFromEnvFile"]}));
+
+  // ***** Enable Cors *****
+  app.enableCors({
+    origin: ['http://localhost:3000', 'https://inventory.aranabdi.ir'],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true
+  })
+  
 }
