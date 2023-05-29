@@ -36,4 +36,9 @@ export class AuthController {
         return user;
     }
 
+    @Post('/logout')
+    signout(@Session() session: any) {
+        session.userId = null;
+    }
+
 }
