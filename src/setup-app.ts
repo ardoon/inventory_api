@@ -1,7 +1,10 @@
+import { ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 export const setupApp = (app: any) => {
-    const config = new DocumentBuilder()
+
+  // ***** Swagger Configurations *****
+  const config = new DocumentBuilder()
     .setTitle('Inventory API')
     .setDescription('The inventory API description')
     .setVersion('1.0')
@@ -9,4 +12,9 @@ export const setupApp = (app: any) => {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);
+
+
+  // ***** Validation Pipe *****
+  app.useGlobalPipes(new ValidationPipe());
+
 }
