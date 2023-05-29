@@ -1,5 +1,6 @@
 import { ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+const cookieSession = require('cookie-session');
 
 export const setupApp = (app: any) => {
 
@@ -18,5 +19,8 @@ export const setupApp = (app: any) => {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true
   }));
+
+  // ***** Cookie Session *****
+  app.use(cookieSession({ keys: ['pleaseImportFromEnv']}))
 
 }
