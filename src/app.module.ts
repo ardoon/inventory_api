@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { UnitsModule } from './units/units.module';
 
 @Module({
   imports: [UsersModule, TypeOrmModule.forRoot({
@@ -9,7 +10,7 @@ import { AuthModule } from './auth/auth.module';
     database: "db.sqlite",
     synchronize:true,
     autoLoadEntities: true
-  }), AuthModule],
+  }), AuthModule, UnitsModule],
   controllers: [],
   providers: [],
 })
