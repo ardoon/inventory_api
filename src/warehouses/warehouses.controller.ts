@@ -6,7 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 
 @ApiTags('Warehouse')
-@Controller('warehouse')
+@Controller('warehouses')
 @UseGuards(AuthGuard)
 export class WarehousesController {
   constructor(private readonly warehousesService: WarehousesService) {}
