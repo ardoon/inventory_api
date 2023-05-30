@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, NotFoundException } from '@nestjs/common';
 import { UnitsService } from './units.service';
 import { CreateUnitDto } from './dto/create-unit.dto';
 import { UpdateUnitDto } from './dto/update-unit.dto';
@@ -22,8 +22,12 @@ export class UnitsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.unitsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const unit = await this.unitsService.findOne(+id);
+    if(!unit) {
+      throw new NotFoundException("Unit not exists!");
+    }
+    return unit;
   }
 
   @Patch(':id')

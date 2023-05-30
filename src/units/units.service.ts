@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUnitDto } from './dto/create-unit.dto';
 import { UpdateUnitDto } from './dto/update-unit.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -34,13 +34,19 @@ export class UnitsService {
       throw new BadRequestException(`There is a ${name} unit!`);
     }
 
-    const unit = await this.unitsRepository.findOneByOrFail({id});
+    const unit = await this.unitsRepository.findOneBy({id});
+    if(!unit) {
+      throw new NotFoundException("Unit not exists!");
+    }
     Object.assign(unit, {name});
     return this.unitsRepository.save(unit);
   }
 
   async remove(id: number) {
-    const unit = await this.unitsRepository.findOneByOrFail({id});
+    const unit = await this.unitsRepository.findOneBy({id});
+    if(!unit) {
+      throw new NotFoundException("Unit not exists!");
+    }
     return this.unitsRepository.remove(unit);
   }
 }
