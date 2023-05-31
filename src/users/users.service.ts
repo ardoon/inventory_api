@@ -28,9 +28,11 @@ export class UsersService {
         // Check if mobile is duplicated
         const mobile = data.mobile;
         
-        const users = await this.usersRepository.findBy({ mobile })
-        if(users.length) {
-            throw new BadRequestException(`There is a user with this mobile number!`)
+        if(mobile) {
+            const users = await this.usersRepository.findBy({ mobile })
+            if(users.length) {
+                throw new BadRequestException(`There is a user with this mobile number!`)
+            }
         }
 
         const user = this.usersRepository.create(data);

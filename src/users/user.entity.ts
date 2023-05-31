@@ -15,10 +15,14 @@ export class User {
     @Column()
     role: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     mobile: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     password: string;
 
 }
