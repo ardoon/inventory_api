@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, NotFoundException, Query, ParseIntPipe } from '@nestjs/common';
 import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 
 @ApiTags('Sections')
@@ -13,12 +13,17 @@ export class SectionsController {
 
   @Post()
   create(@Body() createUnitDto: CreateSectionDto) {
-    return this.sectionService.create(createUnitDto.name);
+    return this.sectionService.create(createUnitDto);
   }
 
+  @ApiQuery({
+    name: 'parentId',
+    type: Number,
+    required: false
+  })
   @Get()
-  findAll() {
-    return this.sectionService.findAll();
+  findAll(@Query('parentId') parentId?: number) {
+    return this.sectionService.findAll(parentId);
   }
 
   @Get(':id')

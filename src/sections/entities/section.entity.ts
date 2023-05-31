@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Section {
@@ -8,5 +8,8 @@ export class Section {
 
     @Column()
     name: string;
+
+    @Column({nullable: true})
+    parentId: number;
 
 }
