@@ -7,6 +7,7 @@ import { SectionsModule } from './sections/sections.module';
 import { WarehousesModule } from './warehouses/warehouses.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
+import { EntriesModule } from './entries/entries.module';
 
 @Module({
   imports: [UsersModule, TypeOrmModule.forRoot({
@@ -14,7 +15,7 @@ import { ProductsModule } from './products/products.module';
     database: "db.sqlite",
     synchronize:true,
     autoLoadEntities: true
-  }), AuthModule, UnitsModule, SectionsModule, WarehousesModule, CategoriesModule, ProductsModule],
+  }), AuthModule, UnitsModule, SectionsModule, WarehousesModule, CategoriesModule, ProductsModule, EntriesModule],
   controllers: [],
   providers: [],
 })
