@@ -2,23 +2,31 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } f
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 
 @ApiTags('Products')
 @UseGuards(AuthGuard)
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
 
+  @ApiQuery({
+    name: "categoryId",
+    type: String,
+    required: false
+  })
   @Get()
-  findAll(@Query('categoryId') id: string) {
-    return this.productsService.findAll(+id);
+  findAll(@Query('categoryId') id?: string) {
+    if(id) {
+      return this.productsService.findAll(+id);
+    }
+    return this.productsService.getProducts();
   }
 
   @Get(':id')

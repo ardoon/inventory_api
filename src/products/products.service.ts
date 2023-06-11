@@ -19,6 +19,10 @@ export class ProductsService {
     return this.productsRepository.findBy({categoryId});
   }
 
+  getProducts() {
+    return this.productsRepository.find();
+  }
+
   async findOne(id: number) {
     const product: Product = await this.checkDuplicationAndGetProduct(id);
     return product;
