@@ -29,6 +29,11 @@ export class ProductsController {
     return this.productsService.getProducts();
   }
 
+  @Get("/units/:productId")
+  getUnits(@Param('productId') id: string) {
+    return this.productsService.getUnits(+id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(+id);

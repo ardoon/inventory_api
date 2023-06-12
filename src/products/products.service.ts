@@ -4,11 +4,13 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
+import { UnitsService } from 'src/units/units.service';
+import { Unit } from 'src/units/entities/unit.entity';
 
 @Injectable()
 export class ProductsService {
 
-  constructor(@InjectRepository(Product) private productsRepository: Repository<Product>) {}
+  constructor(@InjectRepository(Product) private productsRepository: Repository<Product>, private unitsService: UnitsService) {}
 
   async create(createProductDto: CreateProductDto) {
     const product: Product = this.productsRepository.create(createProductDto);
@@ -21,6 +23,16 @@ export class ProductsService {
 
   getProducts() {
     return this.productsRepository.find();
+  }
+
+  async getUnits(productId: number) {
+    const product: Product = await this.checkDuplicationAndGetProduct(productId);
+    const unit: Unit = await this.unitsService.findOne(product.unitId);
+    if(product.secondaryUnitId) {
+      const secondaryUnit: Unit = await this.unitsService.findOne(product.secondaryUnitId);
+      return [unit, secondaryUnit];
+    }
+    return [unit];
   }
 
   async findOne(id: number) {

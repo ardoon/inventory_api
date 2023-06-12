@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { EntryRecord } from "./entry-record.entry";
 
 @Entity()
@@ -7,7 +7,8 @@ export class Entry {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ type: 'datetime' })
+    @Index()
     date: string;
 
     @Column()

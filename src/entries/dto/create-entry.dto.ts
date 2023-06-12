@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsAlphanumeric, IsNumber, IsString } from "class-validator";
+import { IsAlphanumeric, IsDate, IsDateString, IsNumber, IsString } from "class-validator";
 
 export class CreateEntryDto {
 
     @ApiProperty()
-    @IsString()
+    @IsDateString()
     date: string;
 
     @ApiProperty()
