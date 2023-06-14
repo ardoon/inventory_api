@@ -26,7 +26,7 @@ export const setupApp = (app: any) => {
 
   // ***** Enable Cors *****
   app.enableCors({
-    origin: ['http://localhost:4000','http://localhost:3000', 'https://inventory.aranabdi.ir'],
+    origin: '*',
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true
   })
