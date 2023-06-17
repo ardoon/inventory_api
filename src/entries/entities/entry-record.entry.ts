@@ -1,5 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Entry } from "./entry.entity";
+import { Product } from "src/products/entities/product.entity";
+import { Unit } from "src/units/entities/unit.entity";
 
 @Entity()
 export class EntryRecord {
@@ -7,14 +9,14 @@ export class EntryRecord {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    productId: number;
+    @ManyToOne(type => Product, (product) => product)
+    product: Product
 
     @Column()
     amount: number;
 
-    @Column()
-    unitId: number;
+    @ManyToOne(type => Unit, (unit) => unit)
+    unit: Unit
 
     @Column()
     price: number;

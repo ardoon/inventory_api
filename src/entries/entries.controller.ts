@@ -23,24 +23,24 @@ export class EntriesController {
   //   type: Number,
   //   required: false
   // })
-  // @Get()
-  // findAll(@Query('parentId') parentId?: number) {
-  //   return this.entriesService.findAll(parentId);
-  // }
+  @Get()
+  findAll() {
+    return this.entriesService.findAll();
+  }
 
-  // @Get(':id')
-  // async findOne(@Param('id') id: string) {
-  //   const section = await this.entriesService.findOne(+id);
-  //   if(!section) {
-  //     throw new NotFoundException('Entry not exists!');
-  //   }
-  //   return section;
-  // }
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    const entry = await this.entriesService.findOne(+id);
+    if(!entry) {
+      throw new NotFoundException('Entry not exists!');
+    }
+    return entry;
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateEntryDto: UpdateEntryDto) {
-  //   return this.entriesService.update(+id, updateEntryDto.date);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateEntryDto: UpdateEntryDto) { 
+    return this.entriesService.update(+id, updateEntryDto);
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {
