@@ -9,6 +9,11 @@ import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { WarehousesService } from 'src/warehouses/warehouses.service';
 import { Warehouse } from 'src/warehouses/entities/warehouse.entity';
+import { UpdateEntryRecordDto } from './dto/update-entry-record.dto';
+import { ProductsService } from 'src/products/products.service';
+import { UnitsService } from 'src/units/units.service';
+import { Product } from 'src/products/entities/product.entity';
+import { Unit } from 'src/units/entities/unit.entity';
 
 @Injectable()
 export class EntriesService {
@@ -17,7 +22,9 @@ export class EntriesService {
     @InjectRepository(Entry) private entriesRepository: Repository<Entry>,
     @InjectRepository(EntryRecord) private recordsRepository: Repository<EntryRecord>,
     private readonly usersService: UsersService,
-    private readonly warehousesService: WarehousesService
+    private readonly warehousesService: WarehousesService,
+    private readonly productsService: ProductsService,
+    private readonly unitsService: UnitsService
   ) { }
 
   async create(data: CreateDto) {
@@ -70,6 +77,16 @@ export class EntriesService {
     });
   }
 
+  findOneRecord(id: number) {
+    return this.recordsRepository.findOne({
+      where: { id },
+      relations: {
+        product: true,
+        unit: true
+      }
+    });
+  }
+
   async update(id: number, data: UpdateEntryDto) {
     const entry: Entry = await this.entriesRepository.findOneBy({id});
     if(!entry) {
@@ -85,6 +102,23 @@ export class EntriesService {
     entry.warehouse = warehouse;
 
     return await this.entriesRepository.save(entry);
+  }
+
+  async updateRecord(id: number, data: UpdateEntryRecordDto) {
+    const record: EntryRecord = await this.recordsRepository.findOneBy({id});
+    if(!record) {
+      throw new BadRequestException('Record not exists!');
+    }
+
+    const product: Product = await this.productsService.findOne(data.productId);
+    const unit: Unit = await this.unitsService.findOne(data.unitId);
+
+    Object.assign(record, data);
+
+    record.product = product;
+    record.unit = unit;
+
+    return await this.recordsRepository.save(record);
   }
 
   async remove(id: number) {

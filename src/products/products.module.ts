@@ -8,6 +8,7 @@ import { UnitsModule } from 'src/units/units.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Product]), UnitsModule],
   controllers: [ProductsController],
-  providers: [ProductsService]
+  providers: [ProductsService],
+  exports: [ProductsService]
 })
 export class ProductsModule {}

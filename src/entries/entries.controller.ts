@@ -6,6 +6,7 @@ import { ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateEntryRecordDto } from './dto/create-entry-record.dto';
 import { CreateDto } from './dto/create.dto';
+import { UpdateEntryRecordDto } from './dto/update-entry-record.dto';
 
 @ApiTags('Entries')
 @Controller('entries')
@@ -35,6 +36,20 @@ export class EntriesController {
       throw new NotFoundException('Entry not exists!');
     }
     return entry;
+  }
+
+  @Get('records/:id')
+  async findOneRecord(@Param('id') id: string) {
+    const record = await this.entriesService.findOneRecord(+id);
+    if(!record) {
+      throw new NotFoundException('Record not exists!');
+    }
+    return record;
+  }
+
+  @Patch('records/:id')
+  updateRecord(@Param('id') id: string, @Body() updateEntryRecordDto: UpdateEntryRecordDto) {     
+    return this.entriesService.updateRecord(+id, updateEntryRecordDto);
   }
 
   @Patch(':id')
