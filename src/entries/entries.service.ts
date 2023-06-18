@@ -29,9 +29,18 @@ export class EntriesService {
 
   async create(data: CreateDto) {
     const entry = this.entriesRepository.create(data.entry);
+    const user: User = await this.usersService.findOne(data.entry.userId);
+    const warehouse: Warehouse = await this.warehousesService.findOne(data.entry.warehouseId);
+    entry.user = user;
+    entry.warehouse = warehouse;
+
     let newRecords: EntryRecord[] = [];
     data.records.forEach(async record => {
       const rec = this.recordsRepository.create(record);
+      const product: Product = await this.productsService.findOne(record.productId);
+      const unit: Unit = await this.unitsService.findOne(record.unitId);  
+      rec.product = product;
+      rec.unit = unit;
       newRecords.push(rec);
     });
     entry.records = newRecords;
