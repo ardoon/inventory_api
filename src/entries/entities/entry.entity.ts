@@ -22,7 +22,7 @@ export class Entry {
     @ManyToOne(type => Warehouse, (warehouse) => warehouse)
     warehouse: Warehouse
 
-    @OneToMany(type => EntryRecord, (record) => record.entry, {cascade: true})
+    @OneToMany(type => EntryRecord, (record) => record.entry)
     records: EntryRecord[]
 
 }

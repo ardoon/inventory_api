@@ -87,11 +87,11 @@ export class EntriesService {
     return await this.entriesRepository.save(entry);
   }
 
-  // async remove(id: number) {
-  //   const category = await this.entriesRepository.findOneBy({id});
-  //   if(!category) {
-  //     throw new NotFoundException("Category not exists!");
-  //   }
-  //   return this.entriesRepository.remove(category);
-  // }
+  async remove(id: number) {
+    const entry: Entry = await this.entriesRepository.findOneBy({id});
+    if(!entry) {
+      throw new NotFoundException("Entry not exists!");
+    }
+    return await this.entriesRepository.remove(entry);;
+  }
 }

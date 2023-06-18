@@ -42,8 +42,8 @@ export class EntriesController {
     return this.entriesService.update(+id, updateEntryDto);
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.entriesService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.entriesService.remove(+id);
+  }
 }
