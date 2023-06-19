@@ -149,4 +149,11 @@ export class EntriesService {
     }
     return await this.entriesRepository.remove(entry);;
   }
+  async removeRecord(id: number) {
+    const record: EntryRecord = await this.recordsRepository.findOneBy({id});
+    if(!record) {
+      throw new NotFoundException("Record not exists!");
+    }
+    return await this.recordsRepository.remove(record);;
+  }
 }

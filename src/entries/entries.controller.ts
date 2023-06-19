@@ -61,4 +61,9 @@ export class EntriesController {
   remove(@Param('id') id: string) {
     return this.entriesService.remove(+id);
   }
+
+  @Delete('records/:id')
+  removeRecord(@Param('id') id: string) {
+    return this.entriesService.removeRecord(+id);
+  }
 }
