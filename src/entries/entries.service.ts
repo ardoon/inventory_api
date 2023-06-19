@@ -35,15 +35,27 @@ export class EntriesService {
     entry.warehouse = warehouse;
 
     let newRecords: EntryRecord[] = [];
-    data.records.forEach(async record => {
-      const rec = this.recordsRepository.create(record);
+    // data.records.forEach(async record => {
+    //   const rec: EntryRecord = this.recordsRepository.create(record);
+    //   const product: Product = await this.productsService.findOne(record.productId);
+    //   const unit: Unit = await this.unitsService.findOne(record.unitId);  
+      
+    //   rec.product = product;
+    //   rec.unit = unit;
+    //   console.log(rec);
+      
+    //   newRecords.push(rec);
+    // });
+    await Promise.all(data.records.map(async (record) => {
+      const rec: EntryRecord = this.recordsRepository.create(record);
       const product: Product = await this.productsService.findOne(record.productId);
       const unit: Unit = await this.unitsService.findOne(record.unitId);  
       rec.product = product;
-      rec.unit = unit;
+      rec.unit = unit;      
       newRecords.push(rec);
-    });
+    }));
     entry.records = newRecords;
+    console.log(entry);
     return await this.entriesRepository.save(entry);
   }
 

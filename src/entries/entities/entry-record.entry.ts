@@ -24,6 +24,6 @@ export class EntryRecord {
     @Column()
     description: string;
 
-    @ManyToOne(type => Entry, (entry) => entry.records, { onDelete: "CASCADE"})
+    @ManyToOne(type => Entry, (entry) => entry.records, { onDelete: "CASCADE" })
     entry: Entry
 }
