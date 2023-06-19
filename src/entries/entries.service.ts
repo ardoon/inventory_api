@@ -14,6 +14,7 @@ import { ProductsService } from 'src/products/products.service';
 import { UnitsService } from 'src/units/units.service';
 import { Product } from 'src/products/entities/product.entity';
 import { Unit } from 'src/units/entities/unit.entity';
+import { CreateEntryRecordDto } from './dto/create-entry-record.dto';
 
 @Injectable()
 export class EntriesService {
@@ -35,17 +36,7 @@ export class EntriesService {
     entry.warehouse = warehouse;
 
     let newRecords: EntryRecord[] = [];
-    // data.records.forEach(async record => {
-    //   const rec: EntryRecord = this.recordsRepository.create(record);
-    //   const product: Product = await this.productsService.findOne(record.productId);
-    //   const unit: Unit = await this.unitsService.findOne(record.unitId);  
-      
-    //   rec.product = product;
-    //   rec.unit = unit;
-    //   console.log(rec);
-      
-    //   newRecords.push(rec);
-    // });
+
     await Promise.all(data.records.map(async (record) => {
       const rec: EntryRecord = this.recordsRepository.create(record);
       const product: Product = await this.productsService.findOne(record.productId);
@@ -55,7 +46,41 @@ export class EntriesService {
       newRecords.push(rec);
     }));
     entry.records = newRecords;
-    console.log(entry);
+    return await this.entriesRepository.save(entry);
+  }
+
+  async createRecords(id: number, records: CreateEntryRecordDto[]) {
+
+    const entry = await this.entriesRepository.findOne({
+      where: { id },
+      relations: {
+        records: {
+          product: true,
+          unit: true
+        }
+      }
+    });
+    if(!entry) {
+      throw new BadRequestException('Entry not exists!');
+    }
+
+    let newRecords: EntryRecord[] = [];
+
+    await Promise.all(records.map(async (record) => {
+      const rec: EntryRecord = this.recordsRepository.create(record);
+      const product: Product = await this.productsService.findOne(record.productId);
+      const unit: Unit = await this.unitsService.findOne(record.unitId);  
+      rec.product = product;
+      rec.unit = unit;      
+      newRecords.push(rec);
+    }));    
+
+    if(entry.records.length > 0) {
+      entry.records = [...entry.records, ...newRecords]
+    } else {
+      entry.records = newRecords
+    }
+    
     return await this.entriesRepository.save(entry);
   }
 

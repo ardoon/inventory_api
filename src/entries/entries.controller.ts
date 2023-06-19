@@ -19,6 +19,11 @@ export class EntriesController {
     return this.entriesService.create(data);
   }
 
+  @Post('/records/:id')
+  createRecords(@Param('id') id: string, @Body() records: CreateEntryRecordDto[]) {
+    return this.entriesService.createRecords(+id, records);
+  }
+
   // @ApiQuery({
   //   name: 'parentId',
   //   type: Number,
