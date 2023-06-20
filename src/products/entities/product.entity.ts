@@ -25,4 +25,7 @@ export class Product {
     @Column()
     categoryId: number;
 
+    @Column({nullable: true, default: 0})
+    amount?: number = 0;
+
 }

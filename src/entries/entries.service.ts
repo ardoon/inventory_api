@@ -40,6 +40,8 @@ export class EntriesService {
     await Promise.all(data.records.map(async (record) => {
       const rec: EntryRecord = this.recordsRepository.create(record);
       const product: Product = await this.productsService.findOne(record.productId);
+      product.amount += record.amount;
+      await this.productsService.update(product.id, product);
       const unit: Unit = await this.unitsService.findOne(record.unitId);  
       rec.product = product;
       rec.unit = unit;      
@@ -70,6 +72,8 @@ export class EntriesService {
       const rec: EntryRecord = this.recordsRepository.create(record);
       const product: Product = await this.productsService.findOne(record.productId);
       const unit: Unit = await this.unitsService.findOne(record.unitId);  
+      product.amount += record.amount;
+      await this.productsService.update(product.id, product);
       rec.product = product;
       rec.unit = unit;      
       newRecords.push(rec);
@@ -159,6 +163,22 @@ export class EntriesService {
     const product: Product = await this.productsService.findOne(data.productId);
     const unit: Unit = await this.unitsService.findOne(data.unitId);
 
+    if(record.amount !== data.amount) {
+      let amount: number = 0;
+      if(record.amount > data.amount) {
+        amount = record.amount - data.amount
+        if((product.amount - amount) >= 0) {
+          product.amount -= amount;
+        } else {
+          throw new BadRequestException("Product's amount can't be negative!")
+        }
+      } else if(record.amount < data.amount){
+        amount = data.amount - record.amount
+        product.amount += amount;
+      }
+      await this.productsService.update(product.id, product);
+    }
+
     Object.assign(record, data);
 
     record.product = product;
@@ -168,17 +188,50 @@ export class EntriesService {
   }
 
   async remove(id: number) {
-    const entry: Entry = await this.entriesRepository.findOneBy({id});
+    const entry: Entry = await this.entriesRepository.findOne({
+      where: {id},
+      relations: {
+        records: {
+          product: true,
+          unit: true
+        }
+      }
+    });
     if(!entry) {
       throw new NotFoundException("Entry not exists!");
     }
+    await Promise.all(entry.records.map(async (record) => {
+      const product: Product = await this.productsService.findOne(record.product.id);
+      if(product.amount - record.amount >= 0) {
+        product.amount -= record.amount;
+        this.productsService.update(product.id, product);
+      } else {
+        throw new BadRequestException("Product's amount can't be negative!")
+      }
+    }));  
     return await this.entriesRepository.remove(entry);;
   }
   async removeRecord(id: number) {
-    const record: EntryRecord = await this.recordsRepository.findOneBy({id});
+    const record: EntryRecord = await this.recordsRepository.findOne({
+      where: {id},
+      relations: {
+        product: true,
+        unit: true
+      }
+    });
     if(!record) {
       throw new NotFoundException("Record not exists!");
     }
+
+    const product: Product = await this.productsService.findOne(record.product.id);
+    
+    if(product.amount - record.amount >= 0) {
+      product.amount -= record.amount;
+      this.productsService.update(product.id, product);
+    } else {
+      throw new BadRequestException("Product's amount can't be negative!")
+    }
+
     return await this.recordsRepository.remove(record);;
   }
 }

@@ -1,10 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { AfterInsert, BaseEntity, BeforeInsert, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Entry } from "./entry.entity";
 import { Product } from "src/products/entities/product.entity";
 import { Unit } from "src/units/entities/unit.entity";
 
 @Entity()
-export class EntryRecord {
+export class EntryRecord extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
