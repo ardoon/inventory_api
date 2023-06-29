@@ -19,4 +19,8 @@ export class CreateProductDto {
     @IsOptional()
     unitsRatio?: number;
 
+    @IsNumber()
+    @IsOptional()
+    amount?: number;
+
 }
